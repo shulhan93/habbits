@@ -63,7 +63,7 @@
                     <form class="habbit__form" onsubmit="addDays(event)">
                         <input class="input-icon" name="comment" type="text" placeholder="Комментарий" />
                         <img class="input__icon" src="./images/comment.svg" alt="Иконка комментария" />
-                        <button class="habbit__ready" type="submit">Готово</button>
+                        <button class="btn btn_lg habbit__ready" type="submit">Готово</button>
                     </form>
                 </div>
             </main>
@@ -75,23 +75,24 @@
                     Иконка
                 </div>
                 <div class="icon-select">
-                    <button class="icon icon_active">
+                    <button class="icon icon_active" onclick="setIcon(this,'sport')">
                         <img src='./images/sport.svg' alt='Спорт'>
                     </button>
-                    <button class="icon ">
+                    <button class="icon " onclick="setIcon(this,'water')">
                         <img src='./images/water.svg' alt='Вода'>
                     </button>
-                    <button class="icon ">
+                    <button class="icon " onclick="setIcon(this,'food')">
                         <img src='./images/food.svg' alt='Еда'>
                     </button>
                 </div>
                 <button class="popup__close">
                     <img src='./images/close.svg' alt='Закрыть'>
                 </button>
-                <form class="popup__form">
+                <form class="popup__form" onsubmit="addHabbit(event)">
                     <input type="text" name="name" placeholder="Название">
+                    <input type="text" name="icon" placeholder="Название" value="sport" hidden>
                     <input type="number" name="target" placeholder="Цель">
-                    <button class="button" type="submit">Добавить</button>
+                    <button class="btn btn_lg" type="submit">Добавить</button>
                 </form>
             </div>
         </div>

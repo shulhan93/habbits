@@ -8,6 +8,7 @@ let globalActiveHabbitId;
 
 const page = {
     menu: document.querySelector('.menu__list'),
+    addMenu: document.querySelector('.menu__add'),
     header: {
         h1: document.querySelector('.h1'),
         progressPercent: document.querySelector('.progress__percent'),
@@ -16,6 +17,12 @@ const page = {
     content: {
         daysContainer: document.getElementById('days'),
         nextDay: document.querySelector('.habbit__day')
+    },
+    popup: {
+        cover: document.querySelector('.cover'),
+        popup: document.querySelector('.popup'),
+        iconField: document.querySelector('.popup__form input[name="icon"]'),
+        addHabbits: document.querySelector('.popup__form button')
     }
 }
 
@@ -100,30 +107,26 @@ function rerender(activeHabbitId) {
 /* Work with days */
 function addDays(event) {
     event.preventDefault()
-    const form = event.target
-    const data = new FormData(form)
-    const comment = data.get('comment')
-    form['comment'].classList.remove('error')
 
-    if (!comment) {
-        form['comment'].classList.add('error')
+    const data = validateAndGetFormData(event.target, ['comment'])
+    if (!data) {
+        return
     }
+
     habbits = habbits.map(habbit => {
         if (habbit.id === globalActiveHabbitId) {
-            habbit.days.push({ comment })
+            habbit.days.push({ comment: data.comment })
             return habbit
         }
         return habbit
     })
-    form['comment'].value = ''
+    resetForm(event.target, ['comment'])
     rerender(globalActiveHabbitId)
     saveData()
 
 }
 
-
 function deleteDay(index) {
-    console.log(index)
     habbits = habbits.map(habbit => {
 
         if (habbit.id === globalActiveHabbitId) {
@@ -135,6 +138,109 @@ function deleteDay(index) {
     rerender(globalActiveHabbitId)
     saveData()
 }
+
+page.addMenu.addEventListener('click', togglePopup)
+
+function togglePopup() {
+    page.popup.cover.classList.toggle('cover_hidden')
+}
+
+page.popup.popup.addEventListener('click', function (e) {
+    const btnClose = e.target.closest('.popup__close')
+    if (btnClose) {
+        togglePopup()
+    }
+});
+
+function setIcon(context, icon) {
+    page.popup.iconField.value = icon
+    const activeIcon = document.querySelector('.icon.icon_active')
+    activeIcon.classList.remove('icon_active')
+    context.classList.add('icon_active')
+}
+
+function addHabbit(event) {
+    event.preventDefault()
+    const data = validateAndGetFormData(event.target, ['name', 'icon', 'target'])
+    if (!data) {
+        return
+    }
+    const maxID = habbits.reduce((acc, habbit) => acc > habbit.id ? acc : habbit.id, 0)
+    habbits.push({
+        id: maxID + 1,
+        name: data.name,
+        target: data.target,
+        icon: data.icon,
+        days: []
+    })
+    resetForm(event.target, ['name', 'target'])
+    togglePopup()
+    rerender(maxID + 1);
+
+}
+
+function resetForm(form, fields) {
+    for (const field of fields) {
+        form[field].value = ''
+    }
+
+}
+
+function validateAndGetFormData(form, fields) {
+    const formData = new FormData(form)
+    res = {}
+    for (const field of fields) {
+        const fieldValue = formData.get(field)
+        form[field].classList.remove('error')
+        if (!fieldValue) {
+            form[field].classList.add('error')
+        }
+        res[field] = fieldValue
+    }
+    let isValid = true
+    for (const field of fields) {
+        if (!res[field]) {
+            isValid = false
+        }
+    }
+    if (!isValid) {
+        return
+    }
+    return res
+}
+
+// function addHabbit(e) {
+//     e.preventDefault()
+//     const form = e.target
+//     const data = new FormData(form)
+//     const nameHabbit = data.get('name')
+//     const targetHabbit = data.get('target')
+//     const iconHabbit = data.get('icon')
+
+//     form['name'].classList.remove('error')
+//     form['target'].classList.remove('error')
+
+//     if (!nameHabbit) form['name'].classList.add('error')
+//     if (!targetHabbit) form['target'].classList.add('error')
+//     const habbit = {
+//         "id": habbits.length + 1,
+//         "icon": iconHabbit,
+//         "name": nameHabbit,
+//         "target": targetHabbit,
+//         "days": []
+//     }
+//     form['name'].value = ''
+//     form['target'].value = ''
+//     habbits.push(habbit)
+//     saveData()
+//     rerenderMenu(habbit);
+//     rerenderContent(habbit)
+//     rerenderHead(habbit)
+//     togglePopup()
+
+// };
+
+
 
 /* init */
 (() => {

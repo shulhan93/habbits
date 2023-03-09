@@ -27,6 +27,8 @@ body {
     cursor: pointer;
 }
 
+
+
 .panel {
     background-color: #fff;
     min-height: 100vh;
@@ -209,7 +211,10 @@ input.error {
     left: 45px;
 }
 
-.habbit__ready {
+.btn_lg {
+    font-family: "Comfortaa", cursive;
+    width: auto;
+    height: auto;
     padding: 14px 33px;
     background: #edecfe;
     border-radius: 9px;
@@ -220,9 +225,10 @@ input.error {
     color: #5051f9;
     cursor: pointer;
     transition: all 0.3s;
+
 }
 
-.habbit__ready:hover {
+.btn_lg:hover {
     color: #fff;
     background: #5051f9;
 }
@@ -240,7 +246,7 @@ input.error {
 }
 
 .cover_hidden {
-    /* display: none; */
+    display: none;
 }
 
 .popup {
@@ -324,5 +330,3 @@ h2 {
     gap: 15px;
 
 }
-
-.button {}
