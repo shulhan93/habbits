@@ -234,6 +234,7 @@ input.error {
 }
 
 .cover {
+    text-align: center;
     position: fixed;
     left: 0;
     right: 0;
@@ -329,4 +330,13 @@ h2 {
     align-items: center;
     gap: 15px;
 
+}
+
+.welcome {
+    font-size: 30px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
 }

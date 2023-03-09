@@ -1,11 +1,11 @@
 "use scrict";
 
 let habbits = [];
+
 const HABBIT_KEY = "HABBIT_KEY";
 let globalActiveHabbitId;
 
 /* page */
-
 const page = {
     menu: document.querySelector('.menu__list'),
     addMenu: document.querySelector('.menu__add'),
@@ -15,8 +15,12 @@ const page = {
         progressCoverBar: document.querySelector('.progress__cover-bar')
     },
     content: {
+        index: document.querySelector('.content'),
         daysContainer: document.getElementById('days'),
-        nextDay: document.querySelector('.habbit__day')
+        nextDay: document.querySelector('.habbit__day'),
+        habbit: document.querySelector('.habbit'),
+        welcome: document.querySelector('.welcome')
+
     },
     popup: {
         cover: document.querySelector('.cover'),
@@ -27,13 +31,14 @@ const page = {
 }
 
 /* utils */
-
 function loadData() {
     const habbitsString = localStorage.getItem(HABBIT_KEY);
     const habbitArray = JSON.parse(habbitsString);
     if (Array.isArray(habbitArray)) {
         habbits = habbitArray;
+        return true
     }
+    else return false
 }
 
 function saveData() {
@@ -161,6 +166,8 @@ function setIcon(context, icon) {
 
 function addHabbit(event) {
     event.preventDefault()
+    page.content.habbit.classList.remove('hidden')
+    page.content.welcome.classList.add('hidden')
     const data = validateAndGetFormData(event.target, ['name', 'icon', 'target'])
     if (!data) {
         return
@@ -175,6 +182,7 @@ function addHabbit(event) {
     })
     resetForm(event.target, ['name', 'target'])
     togglePopup()
+    saveData()
     rerender(maxID + 1);
 
 }
@@ -209,41 +217,15 @@ function validateAndGetFormData(form, fields) {
     return res
 }
 
-// function addHabbit(e) {
-//     e.preventDefault()
-//     const form = e.target
-//     const data = new FormData(form)
-//     const nameHabbit = data.get('name')
-//     const targetHabbit = data.get('target')
-//     const iconHabbit = data.get('icon')
-
-//     form['name'].classList.remove('error')
-//     form['target'].classList.remove('error')
-
-//     if (!nameHabbit) form['name'].classList.add('error')
-//     if (!targetHabbit) form['target'].classList.add('error')
-//     const habbit = {
-//         "id": habbits.length + 1,
-//         "icon": iconHabbit,
-//         "name": nameHabbit,
-//         "target": targetHabbit,
-//         "days": []
-//     }
-//     form['name'].value = ''
-//     form['target'].value = ''
-//     habbits.push(habbit)
-//     saveData()
-//     rerenderMenu(habbit);
-//     rerenderContent(habbit)
-//     rerenderHead(habbit)
-//     togglePopup()
-
-// };
-
-
-
 /* init */
 (() => {
-    loadData();
-    rerender(habbits[0].id)
+    const data = loadData();
+    if (data) {
+        page.content.habbit.classList.remove('hidden')
+        page.content.welcome.classList.add('hidden')
+        rerender(habbits[0].id)
+    } else {
+        page.content.habbit.classList.add('hidden')
+        page.content.welcome.classList.remove('hidden')
+    }
 })();
